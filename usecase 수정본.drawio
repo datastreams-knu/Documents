@@ -1,19 +1,10 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" modified="2024-09-21T02:57:26.581Z" version="24.4.0" etag="_nHCP_8INpDfONzB2yIM" type="device">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" modified="2024-09-21T03:26:54.734Z" version="24.4.0" etag="Kj-HOmKiQRqAP7FPDsKF" type="device">
   <diagram name="페이지-1" id="rBmJIZxG7yvCgtCbwhHX">
     <mxGraphModel dx="1050" dy="557" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="LRpRrJoJS7gSsxNJ8h3g-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="bBUdrtgZRIGRnJ31DBfr-1" target="bBUdrtgZRIGRnJ31DBfr-3">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="LRpRrJoJS7gSsxNJ8h3g-11" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="bBUdrtgZRIGRnJ31DBfr-1" target="bBUdrtgZRIGRnJ31DBfr-8">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="LRpRrJoJS7gSsxNJ8h3g-16" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="bBUdrtgZRIGRnJ31DBfr-1" target="9bF_0-tk3opLI7xKJc2A-7">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="LRpRrJoJS7gSsxNJ8h3g-17" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="bBUdrtgZRIGRnJ31DBfr-1" target="LRpRrJoJS7gSsxNJ8h3g-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="bBUdrtgZRIGRnJ31DBfr-1" value="회원" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
