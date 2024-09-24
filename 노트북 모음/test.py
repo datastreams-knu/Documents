@@ -61,7 +61,7 @@ for number in range(now_number, now_number-30, -1):
 document_texts = extract_text_from_url(urls)
 
 # 텍스트 분리기 초기화
-text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200, separator=" ")
 
 # 임베딩할 텍스트 준비
 if isinstance(document_texts, list):
