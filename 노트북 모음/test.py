@@ -52,7 +52,7 @@ def initialize_models(texts):
         qa_chain = load_qa_chain(llm=upstage_llm, chain_type="stuff")
 
 # 스크래핑할 URL 목록 생성
-now_number = 28226
+now_number = 28230
 urls = []
 for number in range(now_number, now_number-30, -1):
     urls.append("https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id=" + str(number))
