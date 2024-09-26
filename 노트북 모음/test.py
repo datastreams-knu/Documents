@@ -52,7 +52,7 @@ def initialize_models(texts):
         qa_chain = load_qa_chain(llm=upstage_llm, chain_type="stuff")
 
 # 스크래핑할 URL 목록 생성
-now_number = 28230
+now_number = 28233
 urls = []
 for number in range(now_number, now_number-30, -1):
     urls.append("https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id=" + str(number))
@@ -61,7 +61,7 @@ for number in range(now_number, now_number-30, -1):
 document_texts = extract_text_from_url(urls)
 
 # 텍스트 분리기 초기화
-text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200, separator=" ")
+text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 
 # 임베딩할 텍스트 준비
 if isinstance(document_texts, list):
