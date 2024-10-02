@@ -5,85 +5,76 @@ from langchain_upstage import UpstageEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_upstage import ChatUpstage
-from langchain.chains import RetrievalQA
-from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 from concurrent.futures import ThreadPoolExecutor
+import re
+from datetime import datetime
 
 # Upstage API 키 설정
 os.environ["UPSTAGE_API_KEY"] = "up_coecXafSJVG1v17EEZ3lxjFbZ8xcD"
 
-# 모델을 초기화하기 위한 변수들
-embedding_model = None
-vectorstore = None
-upstage_llm = None
-qa_chain = None
+# 모델 초기화
+embedding_model = UpstageEmbeddings(model="solar-embedding-1-large")
+upstage_llm = ChatUpstage(api_key=os.getenv("UPSTAGE_API_KEY"))
 
 # URL에서 텍스트를 추출하는 함수
-def extract_text_from_url(urls):
-    all_texts = []
-
+def extract_text_from_urls(urls):
     def fetch_text(url):
         try:
             response = requests.get(url)
             soup = BeautifulSoup(response.text, 'html.parser')
-            paragraphs = soup.find_all('p')
-            return "\n".join([para.get_text() for para in paragraphs])
+            return "\n".join([para.get_text() for para in soup.find_all('p')])
         except Exception as e:
             print(f"Error processing {url}: {e}")
-            return None
-
-    # 멀티스레드를 사용하여 여러 URL에서 동시에 텍스트를 추출
+            return ""
     with ThreadPoolExecutor() as executor:
-        results = executor.map(fetch_text, urls)
+        return list(executor.map(fetch_text, urls))
 
-    all_texts = [text for text in results if text]
-    return all_texts
-
-# 모델 초기화 함수
-def initialize_models(texts):
-    global embedding_model, vectorstore, upstage_llm, qa_chain
-    if embedding_model is None:
-        embedding_model = UpstageEmbeddings(model="solar-embedding-1-large")
-    if vectorstore is None:
-        vectorstore = FAISS.from_texts(texts, embedding_model)
-    if upstage_llm is None:
-        upstage_llm = ChatUpstage(api_key=os.getenv("UPSTAGE_API_KEY"))
-    if qa_chain is None:
-        qa_chain = load_qa_chain(llm=upstage_llm, chain_type="stuff")
+# 최신 wr_id를 얻는 함수
+def get_latest_wr_id():
+    url = "https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1"
+    response = requests.get(url)
+    if response.status_code == 200:
+        match = re.search(r'wr_id=(\d+)', response.text)
+        if match:
+            return int(match.group(1))
+    return None
 
 # 스크래핑할 URL 목록 생성
-now_number = 28233
-urls = []
-for number in range(now_number, now_number-30, -1):
-    urls.append("https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id=" + str(number))
+now_number = get_latest_wr_id()
+urls = [f"https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id={num}" for num in range(now_number, now_number-30, -1)]
 
 # URL에서 문서 추출
-document_texts = extract_text_from_url(urls)
+document_texts = extract_text_from_urls(urls)
 
-# 텍스트 분리기 초기화
+# 텍스트 분리기
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+texts = [chunk for doc in document_texts for chunk in text_splitter.split_text(doc) if doc]
 
-# 임베딩할 텍스트 준비
-if isinstance(document_texts, list):
-    texts = []
-    for doc in document_texts:
-        if isinstance(doc, str):
-            texts.extend(text_splitter.split_text(doc))
-        else:
-            raise TypeError("리스트 내 각 문서는 문자열이어야 합니다.")
-else:
-    raise TypeError("document_texts는 문자열 리스트여야 합니다.")
+# FAISS 벡터스토어 초기화
+vectorstore = FAISS.from_texts(texts, embedding_model)
 
-# 텍스트를 이용해 모델 초기화
-initialize_models(texts)
+# ConversationBufferMemory 초기화
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-# RetrievalQA 체인 생성
-qa = RetrievalQA(combine_documents_chain=qa_chain, retriever=vectorstore.as_retriever())
+# ConversationalRetrievalChain 생성
+qa = ConversationalRetrievalChain.from_llm(
+    llm=upstage_llm,
+    retriever=vectorstore.as_retriever(),
+    memory=memory
+)
 
-# get_ai_message 함수
 def get_ai_message(user_question):
     try:
-        ai_message = qa.invoke(user_question)
-        return ai_message.get("result")
+        # 현재 시간 가져오기
+        current_time = datetime.now().strftime("%Y-%m-%d")
+        
+        # 사용자 질문에 현재 시간 포함
+        user_question_with_time = f"{user_question} (현재 시간: {current_time})"
+        
+        # 대화 기록을 포함하여 질문에 답변
+        result = qa({"question": user_question_with_time})
+        return result['answer']
     except Exception as e:
         return f"답변을 생성하는 중 오류가 발생했습니다: {e}"
