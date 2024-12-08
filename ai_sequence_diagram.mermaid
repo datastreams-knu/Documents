@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant User
+    participant MainSystem
+    participant WebCrawler
+    participant BeautifulSoup
+    participant Selenium
+    participant TextSplitter
+    participant EmbeddingModel
+    participant PineconeDB
+    participant Retriever
+    participant BM25
+    participant LangChain
+    participant UpstageModel
+    participant Backend
+
+    User->>MainSystem: 질문 제출
+    MainSystem->>WebCrawler: 웹사이트 크롤링 요청
+    WebCrawler->>BeautifulSoup: HTML 분석
+    WebCrawler->>Selenium: 동적 콘텐츠 수집
+    WebCrawler->>TextSplitter: 본문 1100자 청크 분할
+    TextSplitter->>EmbeddingModel: 텍스트 임베딩
+    EmbeddingModel->>PineconeDB: 벡터 저장
+
+    MainSystem->>Retriever: 문서 검색 요청
+    Retriever->>BM25: Sparse 검색 (키워드 유사도)
+    Retriever->>PineconeDB: Dense 검색 (코사인 유사도)
+    
+    Retriever-->>LangChain: 최적 문서 전달
+    LangChain->>UpstageModel: 프롬프트 및 문서 입력
+    UpstageModel->>Backend: JSON 형태 답변 생성
+    Backend->>User: 최종 답변 반환
