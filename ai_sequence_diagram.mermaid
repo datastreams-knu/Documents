@@ -17,7 +17,7 @@ sequenceDiagram
     MainSystem->>WebCrawler: 웹사이트 크롤링 요청
     WebCrawler->>BeautifulSoup: HTML 분석
     WebCrawler->>Selenium: 동적 콘텐츠 수집
-    WebCrawler->>TextSplitter: 본문 1100자 청크 분할
+    WebCrawler->>TextSplitter: 본문 850자 청크 분할
     TextSplitter->>EmbeddingModel: 텍스트 임베딩
     EmbeddingModel->>PineconeDB: 벡터 저장
 
