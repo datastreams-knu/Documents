@@ -1,0 +1,16 @@
+graph TD
+    A[User] -->|Question| B[Main System]
+    B -->|Extract Text & Date| C[Web Crawler]
+    C -->|HTML Content| D[BeautifulSoup & Selenium]
+    D -->|Text & Metadata| E[Text Splitter]
+    E -->|1100-char Chunks| F[Solar Embedding Model]
+    E -->|Text Chunks| G[Rank-BM25]
+    F -->|Dense Vectors| H[Pinecone Vector DB]
+    G -->|Sparse Vectors| I[Keyword Matching]
+    B -->|Retrieve Relevant Docs| J[Hybrid Search]
+    J -->|Weighted Retrieval| K[Top Relevant Documents]
+    K -->|Context & Question| L[LangChain Prompt Template]
+    L -->|Structured Prompt| M[Upstage LLM]
+    M -->|Generate Response| N[Answer Processing]
+    N -->|JSON Response| O[Node.js Backend]
+    O -->|Final Answer| A
